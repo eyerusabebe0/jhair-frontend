@@ -1,0 +1,21 @@
+# Environment variables (NEVER commit these!)
+.env
+.env.local
+.env.production
+.env.development
+
+# Dependencies
+node_modules/
+
+# Build folders
+build/
+dist/
+.next/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
