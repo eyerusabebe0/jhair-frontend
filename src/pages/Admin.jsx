@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AdminLogin from "./AdminLogin";
-import API_URL from "./config/api";
+import API_URL from "../config/api";
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
