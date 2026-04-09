@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import ProductCard from "./ProductCard";
 import { ChevronDown, Sparkles, TrendingUp, Star, Truck, Shield, Clock } from "lucide-react";
-import API_URL from "./config/api";
+import API_URL from "../config/api";
 
 function Home() {
   const [products, setProducts] = useState([]);

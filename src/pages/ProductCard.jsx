@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useScrollAnimation } from "./useScrollAnimation";
-import API_URL from "./config/api";
+import API_URL from "../config/api";
 
 function ProductCard({ product, animationDelay = 0 }) {
   const [ref, isVisible] = useScrollAnimation();

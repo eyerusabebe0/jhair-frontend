@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrash, FaPlus, FaMinus, FaShoppingBag, FaArrowLeft } from "react-icons/fa";
-import API_URL from "./config/api";
+import API_URL from "../config/api";
 
 const Bag = () => {
   const [cartItems, setCartItems] = useState([]);

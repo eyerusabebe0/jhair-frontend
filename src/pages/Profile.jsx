@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEnvelope, FaSignOutAlt, FaHeart, FaShoppingBag } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import API_URL from "./config/api";
+import API_URL from "../config/api";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);

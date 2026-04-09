@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import API_URL from './config/api';
+import API_URL from '../config/api';
 
 const AdminLogin = ({ onLogin }) => {
   const [email, setEmail] = useState('');
