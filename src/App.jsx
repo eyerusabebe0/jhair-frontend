@@ -40,7 +40,7 @@ function App() {
             </Routes>
           </div>
 
-          {/* Footer INSIDE layout */}
+        
           <Footer />
 
         </div>
