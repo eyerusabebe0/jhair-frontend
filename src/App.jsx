@@ -12,6 +12,7 @@ import Signup from "./pages/Signup";
 import Products from "./pages/Products";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import Owner from "./pages/Owner";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/products" element={<Products />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/owner" element={<Owner />} />
             </Routes>
           </div>
 

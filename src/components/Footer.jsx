@@ -56,12 +56,12 @@ const Footer = () => {
             <span className="hover:text-pink-400 cursor-pointer transition">Shipping</span>
           </div>
           
-          {/* Admin Link - Separate line or subtle */}
+          {/* Admin Link - Goes to login page */}
           <Link 
             to="/admin" 
             className="text-gray-600 hover:text-pink-400 text-xs mt-3 transition"
           >
-            Admin Panel
+            🔐 Admin Panel
           </Link>
         </div>
       </div>

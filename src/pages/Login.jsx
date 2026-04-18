@@ -85,8 +85,13 @@ const Login = () => {
 
       setSuccessMessage("✅ Login successful! Redirecting...");
 
+      // ✅ REDIRECT BASED ON ROLE
       setTimeout(() => {
-        navigate("/profile");
+        if (data.user.role === "owner") {
+          navigate("/owner");  // Goes to Owner Dashboard
+        } else {
+          navigate("/profile"); // Goes to User Profile
+        }
       }, 1500);
 
     } catch (error) {
@@ -167,6 +172,17 @@ const Login = () => {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+
+          <p className="text-center text-sm text-gray-500">
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/signup")}
+              className="text-pink-500 hover:underline"
+            >
+              Sign Up
+            </button>
+          </p>
 
         </form>
       </div>

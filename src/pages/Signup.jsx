@@ -17,6 +17,7 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user"
   });
 
   const [errors, setErrors] = useState({});
@@ -66,6 +67,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ VALIDATE FIRST
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -75,10 +77,12 @@ const Signup = () => {
     try {
       setLoading(true);
 
+      // ✅ INCLUDE ROLE
       const userData = {
         name: form.name,
         email: form.email,
-        password: form.password
+        password: form.password,
+        role: form.role
       };
 
       const res = await fetch(`${API_URL}/api/auth/register`, {
@@ -89,32 +93,27 @@ const Signup = () => {
         body: JSON.stringify(userData),
       });
 
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        data = { message: text || `Request failed with status ${res.status}` };
-      }
+      const data = await res.json();
 
       if (!res.ok) {
         setErrors({ general: data.message });
         return;
       }
 
+      // ✅ SAVE TO LOCALSTORAGE
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      console.log("✅ Signup successful - Saved to localStorage:", {
-        token: localStorage.getItem("token"),
-        user: localStorage.getItem("user")
-      });
+      setSuccessMessage(`✅ Signup successful! Redirecting to ${data.user.role} dashboard...`);
 
-      setSuccessMessage("✅ Signup successful! Redirecting to profile...");
-
+      // ✅ REDIRECT BASED ON ROLE
       setTimeout(() => {
-        navigate("/profile");
-      }, 2000);
+        if (data.user.role === "owner") {
+          navigate("/owner");  // Goes to Owner Dashboard
+        } else {
+          navigate("/profile"); // Goes to User Profile
+        }
+      }, 1500);
 
     } catch (error) {
       console.error(error);
@@ -217,6 +216,27 @@ const Signup = () => {
             )}
           </div>
 
+          {/* Role Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Register as:
+            </label>
+            <select
+              name="role"
+              value={form.role}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-pink-400"
+            >
+              <option value="user">👤 Regular User (Shop & Save)</option>
+              <option value="owner">👑 Owner (Add & Manage Products)</option>
+            </select>
+            <p className="text-xs text-gray-400 mt-1">
+              {form.role === "owner" 
+                ? "Owners can add, edit, and delete products" 
+                : "Users can browse, save, and purchase products"}
+            </p>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -224,6 +244,17 @@ const Signup = () => {
           >
             {loading ? "Creating..." : "Sign Up"}
           </button>
+
+          <p className="text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="text-pink-500 hover:underline"
+            >
+              Login
+            </button>
+          </p>
 
         </form>
       </div>

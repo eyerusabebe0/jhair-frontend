@@ -49,11 +49,7 @@ function Home() {
         {/* Animated Content */}
         <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
           {/* Badge */}
-          <div className="animate-bounce mb-6">
-            <span className="px-4 py-2 bg-pink-500/20 backdrop-blur-sm rounded-full text-pink-300 text-sm font-semibold border border-pink-400/30">
-              ✨ Premium Quality Hair ✨
-            </span>
-          </div>
+          
 
           {/* Main Title with Animation */}
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold !text-white mb-6 animate-fade-in-up">
@@ -96,12 +92,7 @@ function Home() {
             <div className="absolute inset-0 rounded-full bg-pink-400 opacity-0 group-hover:opacity-20 transition-opacity"></div>
           </button>
 
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-              <div className="w-1 h-2 bg-white rounded-full mt-2 animate-scroll"></div>
-            </div>
-          </div>
+         
         </div>
       </section>
 

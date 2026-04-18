@@ -19,7 +19,18 @@ function SideMenu() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null); // ✅ Add this state
   const navigate = useNavigate();
+
+  // ✅ DEFINE handleLogout FIRST (before useEffect that might use it)
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("cart");
+    setIsLoggedIn(false);
+    setUserRole(null);
+    navigate("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,20 +38,25 @@ function SideMenu() {
     };
     window.addEventListener("scroll", handleScroll);
     
-    // Check login status
+    // Check login status and role
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+    const userStr = localStorage.getItem("user");
+    
+    if (token && userStr && userStr !== "undefined" && userStr !== "null") {
+      try {
+        const user = JSON.parse(userStr);
+        setIsLoggedIn(true);
+        setUserRole(user.role); // ✅ Store the user's role
+      } catch (e) {
+        console.error("Error parsing user:", e);
+      }
+    } else {
+      setIsLoggedIn(false);
+      setUserRole(null);
+    }
     
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("cart");
-    setIsLoggedIn(false);
-    navigate("/login");
-  };
+  }, []); // ✅ handleLogout is NOT in dependencies, so no issue
 
   return (
     <>
@@ -65,7 +81,7 @@ function SideMenu() {
         </div>
       </div>
 
-      {/* Desktop Sidebar - No scroll effect, always visible */}
+      {/* Desktop Sidebar */}
       <div
         className={`
           fixed top-0 left-0 h-full z-50
@@ -95,32 +111,20 @@ function SideMenu() {
 
         {/* Navigation Links */}
         <nav className="flex-1 px-3 space-y-2">
-          <MenuItem
-            icon={<Home size={20} />}
-            text="Home"
-            isOpen={isOpen}
-            to="/"
-          />
-          <MenuItem
-            icon={<ShoppingBag size={20} />}
-            text="Products"
-            isOpen={isOpen}
-            to="/products"
-          />
+          <MenuItem icon={<Home size={20} />} text="Home" isOpen={isOpen} to="/" />
+          <MenuItem icon={<ShoppingBag size={20} />} text="Products" isOpen={isOpen} to="/products" />
+          
           {isLoggedIn ? (
             <>
-              <MenuItem
-                icon={<User size={20} />}
-                text="Profile"
-                isOpen={isOpen}
-                to="/profile"
-              />
-              <MenuItem
-                icon={<Heart size={20} />}
-                text="Saved"
-                isOpen={isOpen}
-                to="/profile"
-              />
+              {/* Show different menu based on role */}
+              {userRole === "owner" ? (
+                <MenuItem icon={<PlusCircle size={20} />} text="Add Product" isOpen={isOpen} to="/owner" />
+              ) : (
+                <MenuItem icon={<User size={20} />} text="Profile" isOpen={isOpen} to="/profile" />
+              )}
+              
+              <MenuItem icon={<Heart size={20} />} text="Saved" isOpen={isOpen} to="/profile" />
+              
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
@@ -130,19 +134,10 @@ function SideMenu() {
               </button>
             </>
           ) : (
-            <MenuItem
-              icon={<UserPlus size={20} />}
-              text="Signup"
-              isOpen={isOpen}
-              to="/signup"
-            />
+            <MenuItem icon={<UserPlus size={20} />} text="Signup" isOpen={isOpen} to="/signup" />
           )}
-          <MenuItem
-            icon={<PlusCircle size={20} />}
-            text="My Bag"
-            isOpen={isOpen}
-            to="/bag"
-          />
+          
+          <MenuItem icon={<PlusCircle size={20} />} text="My Bag" isOpen={isOpen} to="/bag" />
         </nav>
 
         {/* Bottom Icons */}
@@ -169,10 +164,17 @@ function SideMenu() {
               <nav className="space-y-2">
                 <MobileMenuItem icon={<Home size={20} />} text="Home" to="/" onClick={() => setMobileOpen(false)} />
                 <MobileMenuItem icon={<ShoppingBag size={20} />} text="Products" to="/products" onClick={() => setMobileOpen(false)} />
+                
                 {isLoggedIn ? (
                   <>
-                    <MobileMenuItem icon={<User size={20} />} text="Profile" to="/profile" onClick={() => setMobileOpen(false)} />
+                    {userRole === "owner" ? (
+                      <MobileMenuItem icon={<PlusCircle size={20} />} text="Add Product" to="/owner" onClick={() => setMobileOpen(false)} />
+                    ) : (
+                      <MobileMenuItem icon={<User size={20} />} text="Profile" to="/profile" onClick={() => setMobileOpen(false)} />
+                    )}
+                    
                     <MobileMenuItem icon={<Heart size={20} />} text="Saved" to="/profile" onClick={() => setMobileOpen(false)} />
+                    
                     <button
                       onClick={() => {
                         handleLogout();
@@ -187,6 +189,7 @@ function SideMenu() {
                 ) : (
                   <MobileMenuItem icon={<UserPlus size={20} />} text="Signup" to="/signup" onClick={() => setMobileOpen(false)} />
                 )}
+                
                 <MobileMenuItem icon={<PlusCircle size={20} />} text="My Bag" to="/bag" onClick={() => setMobileOpen(false)} />
               </nav>
             </div>

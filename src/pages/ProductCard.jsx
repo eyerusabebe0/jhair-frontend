@@ -13,7 +13,7 @@ function ProductCard({ product, animationDelay = 0 }) {
   // Check if product is saved when component mounts
   useEffect(() => {
     checkIfSaved();
-  }, []);
+  }, [product._id]); // Re-run if product ID changes
 
   const checkIfSaved = async () => {
     const token = localStorage.getItem("token");
@@ -21,11 +21,17 @@ function ProductCard({ product, animationDelay = 0 }) {
 
     try {
       const res = await fetch(`${API_URL}/api/auth/saved-items`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
       });
-      const savedItems = await res.json();
-      const saved = savedItems.some(item => item._id === product._id);
-      setIsSaved(saved);
+      
+      if (res.ok) {
+        const savedItems = await res.json();
+        const saved = savedItems.some(item => item._id === product._id);
+        setIsSaved(saved);
+      }
     } catch (error) {
       console.error("Error checking saved items:", error);
     }
@@ -35,7 +41,7 @@ function ProductCard({ product, animationDelay = 0 }) {
     const token = localStorage.getItem("token");
     
     if (!token) {
-      alert("Please login to save items!");
+      alert("❤️ Please login to save items to your favorites!");
       navigate("/login");
       return;
     }
@@ -52,10 +58,21 @@ function ProductCard({ product, animationDelay = 0 }) {
       });
 
       const data = await res.json();
-      setIsSaved(data.saved);
-      alert(data.message);
+      
+      if (res.ok) {
+        setIsSaved(data.saved);
+        // Show different message based on save/unsave
+        if (data.saved) {
+          alert(`❤️ "${product.name}" added to your favorites!`);
+        } else {
+          alert(`💔 "${product.name}" removed from favorites`);
+        }
+      } else {
+        alert(data.message || "Something went wrong");
+      }
     } catch (error) {
       console.error("Error saving item:", error);
+      alert("Failed to save item. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -118,35 +135,50 @@ function ProductCard({ product, animationDelay = 0 }) {
           src={product.image}
           className="w-full h-60 object-cover group-hover:scale-110 transition duration-500"
           alt={product.name}
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/300x240?text=No+Image";
+          }}
         />
 
-        {/* Save Button */}
+        {/* Save/Favorite Button */}
         <button
           onClick={handleSaveToggle}
           disabled={saving}
-          className={`absolute top-3 right-3 bg-white p-2 rounded-full shadow cursor-pointer transition ${
-            isSaved ? "text-pink-500" : "text-gray-500 hover:text-pink-500"
+          className={`absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg cursor-pointer transition-all duration-300 hover:scale-110 ${
+            isSaved 
+              ? "text-pink-500 bg-pink-50" 
+              : "text-gray-500 hover:text-pink-500 hover:bg-pink-50"
           }`}
+          title={isSaved ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart size={18} fill={isSaved ? "currentColor" : "none"} />
+          <Heart 
+            size={20} 
+            fill={isSaved ? "currentColor" : "none"} 
+            className={saving ? "animate-pulse" : ""}
+          />
         </button>
+
+        {/* Optional: Show heart count badge */}
+        {/* <div className="absolute top-3 left-3 bg-white/90 rounded-full px-2 py-1 text-xs text-pink-500">
+          ❤️ {product.likes || 0}
+        </div> */}
       </div>
 
       <div className="p-4">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold">{product.name}</h3>
-          <span className="text-pink-500 font-bold">
-            ${product.price}
+          <h3 className="font-semibold text-gray-800 truncate">{product.name}</h3>
+          <span className="text-pink-500 font-bold text-lg">
+            ${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}
           </span>
         </div>
 
-        <p className="text-sm text-gray-400 mt-2">
+        <p className="text-sm text-gray-400 mt-2 line-clamp-2">
           {product.description}
         </p>
 
         <button
           onClick={handleBuyClick}
-          className="mt-4 w-full flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition"
+          className="mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white px-4 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
         >
           Buy Now
         </button>
