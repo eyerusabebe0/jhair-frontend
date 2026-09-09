@@ -27,7 +27,7 @@ function App() {
         <div className="flex flex-col flex-1">
 
           {/* Page Content */}
-          <div className="flex-1 pl-20 md:pl-20">
+          <div className="min-w-0 flex-1 pl-0 md:pl-20">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/profile" element={<Profile />} />
