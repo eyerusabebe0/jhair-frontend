@@ -44,13 +44,13 @@ const AdminLogin = ({ onLogin }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-50 to-white">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-md w-96">
-        <h2 className="text-2xl font-bold text-center mb-2">Admin Panel</h2>
-        <p className="text-center text-gray-500 text-sm mb-6">Restricted Access</p>
+        <h2 className="!text-gray-900 text-2xl font-bold text-center mb-2">Admin Panel</h2>
+        <p className="!text-gray-600 text-center text-sm mb-6">Restricted Access</p>
         
         <input
           type="email"
           placeholder="Admin Email"
-          className="w-full p-3 border rounded-lg mb-4"
+          className="w-full !text-gray-900 placeholder:!text-gray-500 bg-white p-3 border rounded-lg mb-4"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -60,7 +60,7 @@ const AdminLogin = ({ onLogin }) => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full p-3 border rounded-lg pr-12"
+            className="w-full !text-gray-900 placeholder:!text-gray-500 bg-white p-3 border rounded-lg pr-12"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

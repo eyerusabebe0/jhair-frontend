@@ -137,7 +137,7 @@ const Login = () => {
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full outline-none ml-2"
+                className="w-full !text-gray-900 placeholder:!text-gray-500 outline-none ml-2"
               />
             </div>
             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
@@ -153,7 +153,7 @@ const Login = () => {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="w-full outline-none ml-2"
+                className="w-full !text-gray-900 placeholder:!text-gray-500 outline-none ml-2"
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
